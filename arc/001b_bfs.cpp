@@ -28,12 +28,12 @@ int main() {
 
     int choice[6] = {1, -1, 5, -5, 10, -10};
 
-    queue<pair<int, int>> q;
-    q.push(make_pair(A, 0));
+    queue<pair<int, int>> container;
+    container.push(make_pair(A, 0));
 
-    while (!q.empty()) {
-      pair<int, int> tmp = q.front();
-      q.pop();
+    while (!container.empty()) {
+      pair<int, int> tmp = container.front();
+      container.pop();
 
       int current = tmp.first;
       int depth = tmp.second;
@@ -48,7 +48,7 @@ int main() {
         if (changed < 0 || changed > 40) {
           continue;
         } else if (!visited[changed]) {
-          q.push(make_pair(changed, depth + 1));
+          container.push(make_pair(changed, depth + 1));
         }
       }
       visited[current] = true;

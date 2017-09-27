@@ -18,17 +18,20 @@ typedef long long ll;
 
 using namespace std;
 
-struct Point {
+class Point {
+ public:
   int x;
   int y;
   double t;
   double d;
-};
 
-Point make_next(int x, int y, double t, double d) {
-  Point p = {x, y, t, d};
-  return p;
-}
+  Point(int xx, int yy, double tt, double dd) {
+    x = xx;
+    y = yy;
+    t = tt;
+    d = dd;
+  }
+};
 
 int main() {
     cin.tie(0);
@@ -71,7 +74,7 @@ int main() {
 
     // 最短経路を見つけた後は枝刈りが効くので幅優先探索
     queue<Point> container;
-    container.push(make_next(sx, sy, 1., 10.));
+    container.push(Point(sx, sy, 1., 10.));
 
     while (!container.empty()) {
         Point p = container.front();
@@ -99,7 +102,7 @@ int main() {
         int nx = p.x + dx[i];
         int ny = p.y + dy[i];
         if (nx >= 0 && nx < W && ny >= 0 && ny < H) {
-          container.push(make_next(nx, ny, current, d));
+          container.push(Point(nx, ny, current, d));
         }
       }
     }

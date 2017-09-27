@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -15,22 +16,6 @@ typedef long long ll;
 
 using namespace std;
 
-// 日付処理
-class MyDate{
- public:
-  int day;
-  int month;
-  int year;
-
-  MyDate tomorrow();
-
-  MyDate(int y, int m, int d) {
-    year = y;
-    month = m;
-    day = d;
-  }
-};
-
 // 閏年かどうか調べる
 bool is_leap(int y) {
   if ((y % 400) == 0) {
@@ -44,33 +29,43 @@ bool is_leap(int y) {
 }
 
 int get_days_in_month(int y, int m) {
+  assert(m >= 1 && m <= 12);
   int days[] = {31, 28, 31, 30, 31, 30,
                 31, 31, 30, 31, 30, 31};
-  if (m == 2) {
-    return is_leap(y) ? days[1] + 1 : days[1];
-  } else {
-    return days[m - 1];
+  if (m == 2 && is_leap(y)) {
+    return days[1] + 1;
   }
+  return days[m - 1];
 }
 
-// 翌日の日付を返す
-MyDate MyDate::tomorrow() {
-  int td, tm, ty;
-  td = day;
-  tm = month;
-  ty = year;
+// 日付処理
+class MyDate{
+ public:
+  int day;
+  int month;
+  int year;
 
-  td++;
-  if (td > get_days_in_month(year, month)) {
-    td = 1;
-    tm++;
-    if (tm > 12) {
-      ty++;
-      tm = 1;
+  MyDate(int y, int m, int d) {
+    year = y;
+    month = m;
+    day = d;
+  }
+
+  MyDate tomorrow() {
+    int td = day, tm = month, ty = year;
+    td++;
+    if (td > get_days_in_month(year, month)) {
+      td = 1;
+      tm++;
+      if (tm > 12) {
+        ty++;
+        tm = 1;
+      }
     }
+    return MyDate(ty, tm, td);
   }
-  return MyDate(ty, tm, td);
-}
+};
+
 
 int main() {
     cin.tie(0);

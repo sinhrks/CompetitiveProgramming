@@ -16,61 +16,44 @@ typedef long long ll;
 
 using namespace std;
 
-// Union Find
-#define MAX_N 100000
 
 template <typename T>
 class UnionFind {
  private:
-  array<T, MAX_N> par;
-  array<T, MAX_N> rank;
+  vector<T> par;
+  vector<T> rank;
  public:
-  void init(int n);
-  T root(T x);
-  bool same(T x, T y);
-  void unite(T x, T y);
+  explicit UnionFind(int n) {
+    for (int i = 0; i < n; i++) {
+      par.push_back(i);
+      rank.push_back(0);
+    }
+  }
+  // 木の根を求める
+  T root(T x) {
+    if (par[x] ==x) {
+      return x;
+    } else {
+      return par[x] = root(par[x]);
+    }
+  }
+  // x と y が同じ集合に属するか調べる
+  bool same(T x, T y) {
+    return root(x) == root(y);
+  }
+  // x と y が属する集合を併合する
+  void unite(T x, T y) {
+    x = root(x);
+    y = root(y);
+    if (x == y) return;
+    if (rank[x] < rank[y]) {
+      par[x] = y;
+    } else {
+      par[y] = x;
+      if (rank[x] == rank[y]) rank[x]++;
+    }
+  }
 };
-
-// 初期化
-template <typename T>
-void UnionFind<T>::init(int n) {
-  for (int i = 0; i < n; i++) {
-    par[i] = i;
-    rank[i] = 0;
-  }
-}
-
-// 木の根を求める
-template <typename T>
-T UnionFind<T>::root(T x) {
-  if (par[x] ==x) {
-    return x;
-  } else {
-    return par[x] = root(par[x]);
-  }
-}
-
-// x と y が同じ集合に属するか調べる
-template <typename T>
-bool UnionFind<T>::same(T x, T y) {
-  return root(x) == root(y);
-}
-
-// x と y が属する集合を併合する
-template <typename T>
-void UnionFind<T>::unite(T x, T y) {
-  x = root(x);
-  y = root(y);
-  if (x == y) return;
-
-  if (rank[x] < rank[y]) {
-    par[x] = y;
-  } else {
-    par[y] = x;
-    if (rank[x] == rank[y]) rank[x]++;
-  }
-}
-
 
 int main() {
     cin.tie(0);
@@ -79,8 +62,7 @@ int main() {
     int N, Q;
     cin >> N >> Q;
 
-    UnionFind<int> u;
-    u.init(N);
+    UnionFind<int> u = UnionFind<int>(N);
 
     for (int i = 0; i < Q; i++) {
       int p, a, b;

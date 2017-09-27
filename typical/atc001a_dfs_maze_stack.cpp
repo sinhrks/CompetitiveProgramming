@@ -18,15 +18,16 @@ typedef long long ll;
 
 using namespace std;
 
-struct Point {
+class Point {
+ public:
   int x;
   int y;
-};
 
-Point make_next(int x, int y) {
-  Point p = {x, y};
-  return p;
-}
+  Point(int xx, int yy) {
+    x = xx;
+    y = yy;
+  }
+};
 
 int main() {
     cin.tie(0);
@@ -57,7 +58,7 @@ int main() {
     int dy[4] = {0, 1, 0, -1};
 
     stack<Point> container;
-    container.push(make_next(x, y));
+    container.push(Point(x, y));
 
     while (!container.empty()) {
       Point p = container.top();
@@ -73,7 +74,7 @@ int main() {
             int nx = p.x + dx[i];
             int ny = p.y + dy[i];
             if (nx >= 0 && nx < W && ny >= 0 && ny < H) {
-              container.push(make_next(nx, ny));
+              container.push(Point(nx, ny));
             }
           }
         }

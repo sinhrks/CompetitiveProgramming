@@ -1,28 +1,35 @@
-#include <algorithm>
+#include <assert.h>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <algorithm>
+#include <numeric>
 #include <functional>
 #include <iostream>
 #include <string>
+#include <array>
 #include <vector>
 #include <stack>
 #include <queue>
 #include <set>
 #include <map>
 #include <complex>
+#include <bitset>
 typedef long long ll;
 
 using namespace std;
 
 int get_days_in_month(int y, int m) {
-  int days[] = {31, 29, 31, 30, 31, 30,
-                31, 31, 30, 31, 30, 31};
+  assert(m >= 1 && m <= 12);
+  int days[12] = {31, 29, 31, 30, 31, 30,
+                  31, 31, 30, 31, 30, 31};
   return days[m - 1];
 }
 
 int get_day_of_year(int y, int m, int d) {
+  assert(m >= 1 && m <= 12);
+  assert(d >= 1 && d <= get_days_in_month(y, m));
   for (int i = 1; i < m; i++) {
     d += get_days_in_month(2012, i);
   }
@@ -34,7 +41,7 @@ int main() {
     ios::sync_with_stdio(false);
 
     int N;
-    cin >> N;
+    scanf("%d", &N);
 
     set<int> s;
     for (int i = 0; i < N; i++) {
@@ -64,7 +71,9 @@ int main() {
       while (holidays[d]) {
         d++;
       }
-      holidays[d] = true;
+      if (d < 366) {
+        holidays[d] = true;
+      }
     }
 
     int m = 0;

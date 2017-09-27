@@ -18,16 +18,18 @@ typedef long long ll;
 
 using namespace std;
 
-struct Point {
+class Point {
+ public:
   int x;
   int y;
   int d;
-};
 
-Point make_next(int x, int y, int d) {
-  Point p = {x, y, d};
-  return p;
-}
+  Point(int xx, int yy, int dd) {
+    x = xx;
+    y = yy;
+    d = dd;
+  }
+};
 
 int main() {
     cin.tie(0);
@@ -62,7 +64,7 @@ int main() {
     int dy[4] = {0, 1, 0, -1};
 
     queue<Point> container;
-    container.push(make_next(sx, sy, 0));
+    container.push(Point(sx, sy, 0));
 
     while (!container.empty()) {
       Point p = container.front();
@@ -78,7 +80,7 @@ int main() {
             int nx = p.x + dx[i];
             int ny = p.y + dy[i];
             if (nx >= 0 && nx < W && ny >= 0 && ny < H) {
-              container.push(make_next(nx, ny, p.d + 1));
+              container.push(Point(nx, ny, p.d + 1));
             }
           }
         }

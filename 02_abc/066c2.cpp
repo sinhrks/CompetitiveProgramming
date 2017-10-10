@@ -8,7 +8,6 @@
 #include <map>
 #include <queue>
 #include <set>
-#include <list>
 #include <string>
 #include <vector>
 #include <numeric>
@@ -23,7 +22,7 @@ int main()
     int N;
     cin >> N;
 
-    list<int> a;
+    deque<int> a;
     for (int i = 0; i < N; i++) {
       int64_t c;
       cin >> c;
@@ -35,11 +34,13 @@ int main()
     }
 
     if (N % 2 == 1) {
-      reverse(a.begin(), a.end());
-    }
-
-    for(auto itr = a.begin(); itr != a.end(); ++itr) {
-      cout << *itr << " ";
+      for(auto itr = a.rbegin(); itr != a.rend(); ++itr) {
+        cout << *itr << " ";
+      }
+    } else {
+      for(auto itr = a.begin(); itr != a.end(); ++itr) {
+        cout << *itr << " ";
+      }
     }
     cout << endl;
     return 0;

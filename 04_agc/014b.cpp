@@ -21,31 +21,27 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int conn[100010] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int N, M;
+  cin >> N >> M;
 
-  int a[100010] = {};
-  for (int i = 0; i < N; i++) {
-    cin >> a[i];
+  for (int i = 0; i < M; i++) {
+    int a, b;
+    cin >> a >> b;
+    conn[a]++;
+    conn[b]++;
   }
-
-  int l = 1;
-  int r = 1;
-  int total = 0;
-
-  int current = a[0];
-  while (l <= N) {
-    while (current < a[r + 1]) {
-      current = a[r + 1];
-      r++;
+  for (int i = 0; i < N + 1; i++) {
+    if (conn[i] % 2 == 1) {
+      cout << "NO" << endl;
+      return 0;
     }
-    total += (r - l + 1);
-    l++;
   }
-  cout << total << endl;
+  cout << "YES" << endl;
   return 0;
 }

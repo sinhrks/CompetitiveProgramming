@@ -25,9 +25,15 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int A, B, C;
+  cin >> A >> B >> C;
+  if (A == B) {
+    cout << C << endl;
+  } else if (B == C) {
+    cout << A << endl;
+  } else {
+    cout << B <<endl;
+  }
 
-  cout << "Yes" << endl;
   return 0;
 }

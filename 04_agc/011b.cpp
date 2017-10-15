@@ -3,7 +3,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <climits>
 #include <algorithm>
 #include <numeric>
 #include <functional>
@@ -29,6 +28,21 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  ull A[100001] = {};
+  for (int i = 0; i < N; i++) {
+    cin >> A[i];
+  }
+  sort(A, A + N);
+
+  int ans = 0;
+  ull cum = 0;
+  for (int i = 0; i < N - 1; i++) {
+    cum += A[i];
+    if (cum * 2 < A[i + 1]) {
+      ans = i + 1;
+    }
+  }
+
+  cout << N - ans << endl;
   return 0;
 }

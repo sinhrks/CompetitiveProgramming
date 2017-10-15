@@ -67,6 +67,92 @@ ull comb(T n, T k) {
   return r;
 }
 
+const ll MOD7 = 1000000007;
+
+struct ModNum {
+  ll n;
+  ll m;
+
+  explicit ModNum(ll n, ll m) {
+    this->n = n % m;
+    this->m = m;
+  }
+  void operator+=(const ll &rhs) {
+    n += rhs % m;
+    n %= m;
+  }
+  ModNum operator+(const ll &rhs) {
+    return ModNum((n + rhs % m) % m, m);
+  }
+  void operator-=(const ll &rhs) {
+    ll r = rhs % m;
+    if (r >= n) {
+      n -= (r - m);
+    } else {
+      n -= r;
+    }
+    n %= m;
+  }
+  ModNum operator-(const ll &rhs) {
+    ll r = rhs % m;
+    if (r >= n) {
+      return ModNum((n - r + m) % m, m);
+    } else {
+      return ModNum((n - r) % m, m);
+    }
+  }
+  void operator*=(const ll &rhs) {
+    n *= rhs % m;
+    n %= m;
+  }
+  ModNum operator*(const ll &rhs) {
+    return ModNum(n * (rhs % m) % m, m);
+  }
+};
+
+struct FactorialTable {
+  vector<ll> fact;
+  vector<ll> inv;
+  ll m;
+
+  explicit FactorialTable(ll n, ll m) {
+    this->m = m;
+    fact = vector<ll>(n + 1, 0);
+    fact[0] = 1;
+    for (int i = 1; i <= n; i++) {
+      fact[i] = fact[i - 1] * i % m;
+    }
+    inv = vector<ll>(n + 1, 0);
+
+    for (int i = 0; i <= n; i++) {
+      inv[i] = mod_pow(fact[i], m - 2);
+    }
+    /*
+    inv[n] = mod_pow(fact[n], m - 2);
+    for (int i = n - 1; i >= 0; i--) {
+      inv[i] = inv[i + 1] * (i + 1) % m;
+    }
+    */
+
+  }
+  ll mod_pow(ll x, ll n) {
+    ll ans = 1;
+    while (n > 0) {
+      if ((n & 1) == 1) ans = ans * x % m;
+      x = x * x % m;
+      n >>= 1;
+    }
+    return ans;
+  }
+  ll factorial(int n) {
+    return fact[n];
+  }
+  ll comb(int n, int k) {
+    assert(n >= k);
+    return fact[n] * inv[k] % m * inv[n - k] % m;
+  }
+};
+
 void test_prime() {
   assert(!is_prime(0));
   assert(!is_prime(1));
@@ -118,10 +204,86 @@ void test_comb() {
   assert(comb(10, 5) == 252);
 }
 
+void test_modnum() {
+  ModNum n1(10, 7);
+  assert(n1.n == 3);
+
+  assert((n1 + 5).n == 1);
+  assert((n1 + 10).n == 6);
+  assert((n1 + 11).n == 0);
+  assert((n1 + 12).n == 1);
+
+  assert((n1 - 1).n == 2);
+  assert((n1 - 3).n == 0);
+  assert((n1 - 4).n == 6);
+  assert((n1 - 7).n == 3);
+  assert((n1 - 10).n == 0);
+
+  assert((n1 * 2).n == 6);
+  assert((n1 * 3).n == 2);
+  assert((n1 * 10).n == 2);
+
+  n1 += 10;
+  assert(n1.n == 6 && n1.m == 7);
+  n1 += 8;
+  assert(n1.n == 0 && n1.m == 7);
+  n1 += 2;
+  assert(n1.n == 2 && n1.m == 7);
+
+  n1 -= 3;
+  assert(n1.n == 6 && n1.m == 7);
+  n1 -= 10;
+  assert(n1.n == 3 && n1.m == 7);
+  n1 -= 11;
+  assert(n1.n == 6 && n1.m == 7);
+
+  n1 *= 2;
+  assert(n1.n == 5 && n1.m == 7);
+  n1 *= 9;
+  assert(n1.n == 3 && n1.m == 7);
+}
+
+void test_factorial_table() {
+  FactorialTable f1(10, MOD7);
+  assert(f1.factorial(2) == 2);
+  assert(f1.factorial(3) == 6);
+  assert(f1.factorial(4) == 24);
+  assert(f1.factorial(4) * f1.inv[2] % MOD7 == 12);
+
+  assert(f1.comb(10, 2) == 45);
+  assert(f1.comb(10, 3) == 120);
+  assert(f1.comb(10, 10) == 1);
+
+  FactorialTable f2(10, 7);
+  assert(f2.factorial(2) == 2);
+  assert(f2.factorial(3) == 6);
+  assert(f2.factorial(4) == 3);
+
+  assert(f2.factorial(4) * f2.inv[2] % 7 == 5);
+  assert(f2.factorial(4) * f2.inv[2] % 7 * f2.inv[2] % 7 == 6);
+  assert(f2.comb(4, 2) == 6);
+  assert(f2.comb(4, 3) == 4);
+  assert(f2.comb(4, 4) == 1);
+
+  FactorialTable f3(10000, MOD7);
+  // the same result as scipy.misc.comb(10000, x, 1) % MOD7
+  assert(f3.comb(10, 2) == 45);
+  assert(f3.comb(10, 3) == 120);
+  assert(f3.comb(10000, 1) == 10000);
+  assert(f3.comb(10000, 2) == 49995000);
+  assert(f3.comb(10000, 10) == 814128327);
+  assert(f3.comb(10000, 100) == 138648429);
+  assert(f3.comb(10000, 1000) == 155349879);
+  cout << f3.comb(10000, 10000);
+  assert(f3.comb(10000, 10000) == 1);
+}
+
 int main() {
   test_prime();
   test_pow();
   test_comb();
+  test_modnum();
+  test_factorial_table();
 
   cout << "SUCCESS!!" << endl;
   return 0;

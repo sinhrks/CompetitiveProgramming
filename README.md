@@ -232,6 +232,19 @@ getline(cin, s);
     }
   }
   ```
+
+  ```
+  while (right - left > 1) {
+    ll trial = (left + right) / 2;
+    ...
+    if (...) {
+      right = trial;
+    } else {
+      left = trial;
+    }
+  }
+  ```
+
 - 三分探索
 - 階乗のmod逆元
 - ダブリング（数列）

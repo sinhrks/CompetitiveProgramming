@@ -97,16 +97,39 @@ struct Graph {
     return all_of(visited.begin(), visited.end(),
                   [](bool v) { return v; });
   }
+  // 二部グラフ判定
+  bool is_bipartite() {
+    vector<int> visited(V, -1);
+    queue<int> container;
+    container.push(0);
+    visited[0] = 1;
+    while (!container.empty()) {
+      int p = container.front();
+      container.pop();
+      for (const auto &e : adj[p]) {
+        if (visited[e.dst] == -1) {
+          visited[e.dst] = (visited[p] + 1) % 2;
+          container.push(e.dst);
+        } else if (visited[e.dst] == visited[p]) {
+          return false;
+        }
+      }
+    }
+    // 連結でない場合は false
+    return all_of(visited.begin(), visited.end(),
+                  [](int v) { return v >= 0; });
+  }
   vector<T> shortest_path(int s);
   vector<vector<T>> shortest_paths();
   Graph<T> spanning_tree();
 };
 
-// 最短経路(ダイクストラ法)
+// 最短経路 (Dijkstra)
 template <typename T>
 vector<T> Graph<T>::shortest_path(int src) {
   priority_queue<Edge<T>> pq;
   vector<T> dist(V, INF);
+
   pq.push(Edge<T>(src, src, 0));
   dist[src] = 0;
 
@@ -186,7 +209,7 @@ struct UnionFind {
   }
 };
 
-// 最小全域木 (クラスカル法)
+// 最小全域木 (Kruskal)
 template <typename T>
 Graph<T> Graph<T>::spanning_tree() {
   Graph<T> result = Graph(V);

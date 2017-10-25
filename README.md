@@ -98,8 +98,8 @@ getline(cin, s);
 - 文字列の長さ `str.size()`
 - 検索 `str.find()`
   - `if (s.find(c) == std::string::npos) {`
-- 文字列連結 str1+str2
-- (部分文字列) str.substr(pos,len);
+- 文字列連結 `str1 + str2`
+- (部分文字列) `str.substr(pos,len)``;
 - 置換
   - 開始位置と長さを指定 `s.replace(9, 3, "xxx")`
   - 特定文字を置換: `std::replace(s.begin(), s.end(), 'a', 'b')`;
@@ -164,16 +164,25 @@ getline(cin, s);
   ```
 - 出力
   ```
-  for(auto itr = a.begin(); itr != a.end(); ++itr) {
-  	cout << *itr << " ";
+  REP(i, a.size) {
+    cout << a[i] << endl;
   }
   ```
 
 - 逆順
   ```
-  for(auto itr = a.rbegin(); itr != a.rend(); ++itr) {
-  	cout << *itr << " ";
+  REPR(i, a.size) {
+    cout << a[i] << endl;
   }
+  ```
+
+- 相互変換
+  ```
+  // set -> vector
+  vector<int> vec(s.begin(), s.end());
+
+  // vector -> set
+  set<int> s2(vec.begin(), vec.end());
   ```
 
 # ソート、順序変更
@@ -182,6 +191,13 @@ getline(cin, s);
 - 降順: `sort(arr, arr + N, greater<int>())`
 - `stable_sort`
 - 逆転: `reverse`
+- 順列生成
+  ```
+  sort(v.begin(), v.end());
+  do {
+    for(auto x : v) cout << x << " "; cout << "\n";
+  } while (next_permutation(v.begin(), v.end()));
+  ```
 
 # 連想配列
 
@@ -192,6 +208,58 @@ getline(cin, s);
 
 - grundy数
 - BFS, DFS
+  ```
+  // 右、下、左、上
+  const int dx[4] = {1, 0, -1, 0};
+  const int dy[4] = {0, 1, 0, -1};
+
+  class Point {
+   public:
+    int x;
+    int y;
+
+    Point(int xx, int yy) {
+      x = xx;
+      y = yy;
+    }
+  };
+
+  struct Searcher2D {
+    int W, H;
+    vector<vector<bool>> visited;
+    explicit Searcher2D(int width, int height) {
+      W = width;
+      H = height;
+      visited = vector<vector<bool>>(H, vector<bool>(W, false));
+    }
+    int search(int x, int y) {
+      // stack<Point> container;   // DFS
+      queue<Point> container;      // BFS
+      container.push(Point(x, y));
+
+      while (!container.empty()) {
+        // Point p = container.top();     // DFS
+        Point p = container.front();      // BFS
+        container.pop();
+
+        for (int i = 0; i < 4; i++) {
+          int nx = p.x + dx[i];
+          int ny = p.y + dy[i];
+          if (nx >= 0 && nx < W && ny >= 0 && ny < H) {
+            if (!visited[ny][nx]) {
+
+              // 適当な処理を追加
+
+              container.push(Point(nx, ny));
+            }
+          }
+        }
+        visited[p.y][p.x] = true;
+      }
+      return 0;
+    }
+  };
+  ```
 - メモ化再帰
 - 動的計画法（DP）（確率DP，ビットDPを含む）
 - 累積和 [containerlib.cpp](src/containerlib.cpp)

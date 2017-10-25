@@ -3,7 +3,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <climits>
 #include <algorithm>
 #include <numeric>
 #include <functional>
@@ -22,17 +21,23 @@ typedef unsigned long long ull;
 
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
 
 using namespace std;
 
-int main() {
-  cin.tie(0);
-  ios::sync_with_stdio(false);
+${<if Problem.Description.Modulo}
+  static const int MOD = ${Problem.Description.Modulo};
+${<end}
 
-  int N;
-  cin >> N;
+struct ${ClassName} {
+${<foreach Method.Params p}
+  ${p.Type} ${p.Name};
+${<end}
+  ${Method.ReturnType} ${Method.Name}(${foreach Method.Params p , }${p.Type} _${p.Name}${end}) {
+    ${foreach Method.Params p , }${p.Name} = _${p.Name}${end};
+    return ${Method.ReturnType;zeroval};
+  }
+};
 
-  cout << "Yes" << endl;
-  return 0;
-}
+${CutBegin}
+${<TestCode}
+${CutEnd}

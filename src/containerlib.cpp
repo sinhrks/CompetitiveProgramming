@@ -61,32 +61,47 @@ struct Counter {
   }
 };
 
+template <typename T>
+vector<T> uniquify(vector<T> values) {
+  sort(values.begin(), values.end());
+  values.erase(unique(values.begin(), values.end()), values.end());
+  return values;
+}
+
 // 座標圧縮
 template <typename T>
 struct Compressor {
   map<T, int> compressor;
-  vector<int> extractor;
+  vector<T> extractor;
 
   explicit Compressor(vector<T> originals) {
-    sort(originals.begin(), originals.end());
-    originals.erase(unique(originals.begin(), originals.end()),
-                    originals.end());
+    vector<T> u = uniquify(originals);
 
-    extractor = vector<int>(originals.size(), 0);
-    for (int i = 0; i < originals.size(); i++) {
-      compressor[originals[i]] = i;
-      extractor[i] = originals[i];
+    extractor = vector<T>(u.size(), 0);
+    for (int i = 0; i < static_cast<int>(u.size()); i++) {
+      compressor[u[i]] = i;
+      extractor[i] = u[i];
     }
   }
-
+  int size() {
+    return static_cast<int>(compressor.size());
+  }
   int compress(T value) {
     return compressor[value];
   }
   vector<int> compress(const vector<T> &values) {
     // <int> を返したいので for_each は使えない
     vector<int> results(values.size());
-    for (int i = 0; i < values.size(); i++) {
-      results[i] = compressor[i];
+    for (int i = 0; i < static_cast<int>(values.size()); i++) {
+      results[i] = compress(values[i]);
+    }
+    return results;
+  }
+  // 座標圧縮後の各コードが、valuesの圧縮により現れるかどうかを返す
+  vector<bool> compress_as_flag(const vector<T> &values) {
+    vector<bool> results(this->size(), false);
+    for (int i = 0; i < static_cast<int>(values.size()); i++) {
+      results[compress(values[i])] = true;
     }
     return results;
   }
@@ -99,7 +114,7 @@ template <typename T>
 vector<T> accum_vec(const vector<T> &values) {
   vector<T> accumulated(values.size(), 0);
   accumulated[0] = values[0];
-  for (int i = 1; i < values.size(); i++) {
+  for (int i = 1; i < static_cast<int>(values.size()); i++) {
     accumulated[i] = accumulated[i - 1] + values[i];
   }
   return accumulated;
@@ -133,9 +148,9 @@ struct Accumulator2D {
     accumulated = vector<vector<T>>(values.size());
 
     accumulated[0] = accum_vec(values[0]);
-    for (int i = 1; i < values.size(); i++) {
+    for (int i = 1; i < static_cast<int>(values.size()); i++) {
       accumulated[i] = accum_vec(values[i]);
-      for (int j = 0; j < values[i].size(); j++) {
+      for (int j = 0; j < static_cast<int>(values[i].size()); j++) {
         accumulated[i][j] += accumulated[i - 1][j];
       }
     }
@@ -143,8 +158,8 @@ struct Accumulator2D {
   // (x1, y1) の後から (x2, y2) までの要素を合計する
   // (x1, y1, x2, y2は含まれる)
   T sum(int x1, int y1, int x2, int y2) {
-    assert(x1 <= x2 && x2 < accumulated[0].size());
-    assert(y1 <= y2 && y2 < accumulated.size());
+    assert(x1 <= x2 && x2 < static_cast<int>(accumulated[0].size()));
+    assert(y1 <= y2 && y2 < static_cast<int>(accumulated.size()));
 
     T result = accumulated[y2][x2];
     if (x1 != 0) result -= accumulated[y2][x1 - 1];
@@ -178,6 +193,32 @@ void test_argsort() {
   vector<int> v3 = {1, 1, 1, 1};
   vector<int> e3 = {0, 1, 2, 3};
   assert(argsort(v3) == e3);
+
+  vector<int> v4 = {};
+  vector<int> e4 = {};
+  assert(argsort(v4) == e4);
+}
+
+void test_uniquify() {
+  vector<int> v1 = {1, 4, 4, 1, 2};
+  vector<int> e1 = {1, 2, 4};
+  assert(uniquify(v1) == e1);
+
+  vector<int> v2 = {1, 1, 1, 1};
+  vector<int> e2 = {1};
+  assert(uniquify(v2) == e2);
+
+  vector<int> v3 = {1};
+  vector<int> e3 = {1};
+  assert(uniquify(v3) == e3);
+
+  vector<int> v4 = {};
+  vector<int> e4 = {};
+  assert(uniquify(v4) == e4);
+
+  vector<string> v5 = {"aa", "bb", "aa", "cc", "bb"};
+  vector<string> e5 = {"aa", "bb", "cc"};
+  assert(uniquify(v5) == e5);
 }
 
 void test_counter() {
@@ -219,6 +260,26 @@ void test_compressor() {
   assert(i[0] == 30);
   assert(i[1] == 40);
   assert(i[2] == 10);
+
+  vector<int> i2 = {30, 40, 30};
+  vector<bool> e2 = {false, true, true};
+  assert(c.compress_as_flag(i2) == e2);
+
+  vector<int> i3 = {30};
+  vector<bool> e3 = {false, true, false};
+  assert(c.compress_as_flag(i3) == e3);
+}
+
+void test_compressor_string() {
+  return;
+  vector<string> v3 = {"aa", "bb", "aa", "cc"};
+  Compressor<string> c3(v3);
+  assert(c3.compress("aa") == 0);
+  assert(c3.compress("bb") == 1);
+  assert(c3.compress("cc") == 2);
+  assert(c3.extract(0) == "aa");
+  assert(c3.extract(1) == "bb");
+  assert(c3.extract(2) == "cc");
 }
 
 void test_accumulate() {
@@ -261,7 +322,10 @@ void test_accumulate2D() {
 int main() {
   test_inverse();
   test_argsort();
+  test_uniquify();
   test_counter();
+  test_compressor();
+  test_compressor_string();
   test_accumulate();
   test_accumulate2D();
 

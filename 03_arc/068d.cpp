@@ -20,11 +20,11 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-#define REP(i, n) for (int i = 0; i < n; i++)
-#define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
-
 using namespace std;
+
+const int MX = 100010;
+int A[MX] = {};
+
 
 int main() {
   cin.tie(0);
@@ -32,7 +32,21 @@ int main() {
 
   int N;
   cin >> N;
-
-  cout << "Yes" << endl;
+  for (int i = 0; i < N; i++) {
+    int a;
+    cin >> a;
+    A[a]++;
+  }
+  int ans = 0;
+  for (int i = 0; i < MX; i++) {
+    if (A[i] >= 1) {
+      ans++;
+    }
+  }
+  if (ans % 2 == 1) {
+    cout << ans << endl;
+  } else {
+    cout << ans - 1 << endl;
+  }
   return 0;
 }

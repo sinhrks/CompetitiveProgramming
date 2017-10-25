@@ -20,11 +20,12 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-#define REP(i, n) for (int i = 0; i < n; i++)
-#define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
-
 using namespace std;
+
+ll triangle(ll ax, ll ay, ll bx, ll by, ll cx, ll cy) {
+  return abs(ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
+}
+
 
 int main() {
   cin.tie(0);
@@ -33,6 +34,24 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  ll X[110] = {};
+  ll Y[110] = {};
+
+  for (int i = 0; i < N; i++) {
+    cin >> X[i] >> Y[i];
+  }
+
+  int cnt = 0;
+  for (int i = 0; i < N; i++) {
+    for (int j = i + 1; j < N; j++) {
+      for (int k = j + 1; k < N; k++) {
+        ll f = triangle(X[i], Y[i], X[j], Y[j], X[k], Y[k]);
+        if (f > 0 && f % 2 == 0) {
+          cnt++;
+        }
+      }
+    }
+  }
+  cout << cnt << endl;
   return 0;
 }

@@ -20,10 +20,6 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-#define REP(i, n) for (int i = 0; i < n; i++)
-#define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
-
 using namespace std;
 
 int main() {
@@ -33,6 +29,27 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  bool pressed[9] = {};
+
+  int total = 0;
+  for (int i = 0; i < N; i++) {
+    string s;
+    cin >> s;
+    for (int j = 0; j < 9; j++) {
+      if (s[j] == 'x') {
+        total++;
+        pressed[j] = false;
+      } else if (s[j] == 'o') {
+        if (!pressed[j]) {
+          total++;
+        }
+        pressed[j] = true;
+      } else {
+        pressed[j] = false;
+      }
+    }
+  }
+
+  cout << total << endl;
   return 0;
 }

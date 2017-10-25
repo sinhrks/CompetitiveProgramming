@@ -1,11 +1,26 @@
 #include <assert.h>
+#include <math.h>
 #include <iostream>
+#include <algorithm>
 #include <vector>
 
 typedef long long ll;
 typedef unsigned long long ull;
 
 using namespace std;
+
+ll gcd(ll x, ll y) {
+  while (y != 0) {
+    ll r = x % y;
+    x = y;
+    y = r;
+  }
+  return x;
+}
+
+ll lcm(ll x, ll y) {
+  return x * y / gcd(x, y);
+}
 
 template<class T>
 bool is_prime(T n) {
@@ -43,6 +58,22 @@ vector<T> eratosthenes(T n) {
   return prime;
 }
 
+// 素因数分解
+vector<ll> get_primes(ll n) {
+  vector<ll> result;
+
+  for (ll i = 2; i <= sqrt(n); i++) {
+    while ((n % i) == 0) {
+      result.push_back(i);
+      n /= i;
+    }
+  }
+  if (n > sqrt(n)) {
+    result.push_back(n);
+  }
+  return result;
+}
+
 template<class T>
 ll pow(T x, T n) {
   ll ans = 1;
@@ -60,7 +91,7 @@ template <typename T>
 ull comb(T n, T k) {
   assert(n >= k);
   T r = 1;
-  for (ull d = 1; d <= k; ++d) {
+  for (ull d = 1; d <= static_cast<ull>(k); ++d) {
     r *= n--;
     r /= d;
   }
@@ -113,9 +144,11 @@ struct ModNum {
 struct FactorialTable {
   vector<ll> fact;
   vector<ll> inv;
+  ll n;
   ll m;
 
   explicit FactorialTable(ll n, ll m) {
+    this->n = n;
     this->m = m;
     fact = vector<ll>(n + 1, 0);
     fact[0] = 1;
@@ -133,7 +166,6 @@ struct FactorialTable {
       inv[i] = inv[i + 1] * (i + 1) % m;
     }
     */
-
   }
   ll mod_pow(ll x, ll n) {
     ll ans = 1;
@@ -145,13 +177,35 @@ struct FactorialTable {
     return ans;
   }
   ll factorial(int n) {
+    assert(this->n > n);
     return fact[n];
   }
+  // 組み合わせ nCk
   ll comb(int n, int k) {
+    assert(this->n > n);
     assert(n >= k);
     return fact[n] * inv[k] % m * inv[n - k] % m;
   }
+  // 重複組み合わせ nHr = (n + r + 1)Cr
+  // n 種類のものから重複を許して r 個選ぶ場合の数
+  ll mcomb(int n, int k) {
+    return comb(n + k - 1, k);
+  }
 };
+
+void test_gcd_lcm() {
+  assert(gcd(3, 2) == 1);
+  assert(lcm(3, 2) == 6);
+
+  assert(gcd(4, 2) == 2);
+  assert(lcm(4, 2) == 4);
+
+  assert(gcd(4, 12) == 4);
+  assert(lcm(4, 12) == 12);
+
+  assert(gcd(28, 21) == 7);
+  assert(lcm(28, 21) == 84);
+}
 
 void test_prime() {
   assert(!is_prime(0));
@@ -180,6 +234,13 @@ void test_prime() {
   for (auto e : expected) {
     assert(is_prime(e));
   }
+}
+
+void test_primes() {
+  vector<ll> e1 = {2, 2, 3};
+  assert(get_primes(12) == e1);
+  vector<ll> e2 = {2, 2, 3, 3};
+  assert(get_primes(36) == e2);
 }
 
 void test_pow() {
@@ -244,7 +305,7 @@ void test_modnum() {
 }
 
 void test_factorial_table() {
-  FactorialTable f1(10, MOD7);
+  FactorialTable f1(11, MOD7);
   assert(f1.factorial(2) == 2);
   assert(f1.factorial(3) == 6);
   assert(f1.factorial(4) == 24);
@@ -265,7 +326,7 @@ void test_factorial_table() {
   assert(f2.comb(4, 3) == 4);
   assert(f2.comb(4, 4) == 1);
 
-  FactorialTable f3(10000, MOD7);
+  FactorialTable f3(10001, MOD7);
   // the same result as scipy.misc.comb(10000, x, 1) % MOD7
   assert(f3.comb(10, 2) == 45);
   assert(f3.comb(10, 3) == 120);
@@ -274,12 +335,17 @@ void test_factorial_table() {
   assert(f3.comb(10000, 10) == 814128327);
   assert(f3.comb(10000, 100) == 138648429);
   assert(f3.comb(10000, 1000) == 155349879);
-  cout << f3.comb(10000, 10000);
   assert(f3.comb(10000, 10000) == 1);
+
+  // 重複組み合わせ
+  assert(f3.mcomb(3, 4) == 15);
+  assert(f3.mcomb(5, 2) == 15);
 }
 
 int main() {
+  test_gcd_lcm();
   test_prime();
+  test_primes();
   test_pow();
   test_comb();
   test_modnum();

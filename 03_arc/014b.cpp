@@ -20,10 +20,6 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-#define REP(i, n) for (int i = 0; i < n; i++)
-#define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
-
 using namespace std;
 
 int main() {
@@ -33,6 +29,24 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  set<string> words;
+  string last = "";
+  for (int i = 0; i < N; i++) {
+    string word;
+    cin >> word;
+    if (i > 0) {
+      if (word[0] != last[last.size() - 1] || words.find(word) != words.end()) {
+        if (i % 2 == 1) {
+          cout << "WIN" << endl;
+        } else {
+          cout << "LOSE" << endl;
+        }
+        return 0;
+      }
+    }
+    words.insert(word);
+    last = word;
+  }
+  cout << "DRAW" << endl;
   return 0;
 }

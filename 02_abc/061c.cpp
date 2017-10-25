@@ -31,8 +31,25 @@ int main() {
   ios::sync_with_stdio(false);
 
   int N;
-  cin >> N;
+  ll K;
+  cin >> N >> K;
 
-  cout << "Yes" << endl;
+  ll num[100010] = {};
+
+  REP(i, N) {
+    int a, b;
+    cin >> a >> b;
+    num[a] += b;
+  }
+
+  ll total = 0;
+  REP(i, 100010) {
+    total += num[i];
+    if (total >= K) {
+      cout << i << endl;
+      return 0;
+    }
+  }
+
   return 0;
 }

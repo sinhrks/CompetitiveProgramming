@@ -22,17 +22,34 @@ typedef unsigned long long ull;
 
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
 
 using namespace std;
+
+ll f(ll x) {
+  ll ans = 0;
+  while (x > 0) {
+    ans += x % 10;
+    x /= 10;
+  }
+  return ans;
+}
 
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
+  ll N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  vector<ll> ans;
+  for (ll i = max(1LL, N - 9 * 17); i < N; i++) {
+    if (i + f(i) == N) {
+      ans.push_back(i);
+    }
+  }
+  cout << ans.size() << endl;
+  for (auto v : ans) {
+    cout << v << endl;
+  }
   return 0;
 }

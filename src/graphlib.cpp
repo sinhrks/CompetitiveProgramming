@@ -7,7 +7,8 @@ typedef long long ll;
 
 using namespace std;
 
-# define INF 0x3f3f3f3f
+# define INF 0x3f3f3f3f             // int
+// # define INF 0x3f3f3f3f3f3f3f3f  // ll
 
 template <typename T>
 struct Edge {
@@ -175,17 +176,19 @@ vector<vector<T>> Graph<T>::shortest_paths() {
 // Union-Find木
 template <typename T>
 struct UnionFind {
+  int n;
   vector<T> par;
   vector<T> rank;
 
   explicit UnionFind(int n) {
+    this->n = n;
     par = vector<T>(n, 0);
     iota(par.begin(), par.end(), 0);
     rank = vector<T>(n, 0);
   }
   // 木の根を求める
   T root(T x) {
-    if (par[x] ==x) {
+    if (par[x] == x) {
       return x;
     } else {
       return par[x] = root(par[x]);
@@ -206,6 +209,15 @@ struct UnionFind {
       par[y] = x;
       if (rank[x] == rank[y]) rank[x]++;
     }
+  }
+  // 連結成分の数を数える
+  int groups() {
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+      // グループには根が自分と同じものが一つずつある
+      if (par[i] == i) ans++;
+    }
+    return ans;
   }
 };
 

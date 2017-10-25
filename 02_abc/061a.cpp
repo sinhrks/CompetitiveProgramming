@@ -30,9 +30,13 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int A, B, C;
+  cin >> A >> B >> C;
 
-  cout << "Yes" << endl;
+  if (A <= C && C <= B) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
+  }
   return 0;
 }

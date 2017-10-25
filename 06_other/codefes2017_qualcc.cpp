@@ -22,7 +22,6 @@ typedef unsigned long long ull;
 
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
 
 using namespace std;
 
@@ -30,9 +29,31 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  string S;
+  cin >> S;
 
-  cout << "Yes" << endl;
+  int l = 0;
+  int r = S.size() - 1;
+
+  int ans = 0;
+  while (l < r) {
+    if (S[l] == S[r]) {
+      l++;
+      r--;
+    } else {
+      if (S[l] == 'x') {
+        ans++;
+        l++;
+      } else if (S[r] == 'x') {
+        ans++;
+        r--;
+      } else {
+        cout << -1 << endl;
+        return 0;
+      }
+    }
+  }
+
+  cout << ans << endl;
   return 0;
 }

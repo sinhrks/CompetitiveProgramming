@@ -22,7 +22,6 @@ typedef unsigned long long ull;
 
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
-#define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
 
 using namespace std;
 
@@ -33,6 +32,18 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  int A[100] = {};
+
+  ll total = 1;
+  ll ans = 1;
+  REP(i, N) {
+    cin >> A[i];
+    total *= 3;
+    if (A[i] % 2 == 0) {
+      ans *= 2;
+    }
+  }
+
+  cout << total - ans << endl;
   return 0;
 }

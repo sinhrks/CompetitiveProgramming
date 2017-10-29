@@ -40,12 +40,28 @@ struct Counter {
       cnt[key] = 1;
     }
   }
+  void add(vector<T> keys) {
+    for (auto key : keys) {
+      add(key);
+    }
+  }
   ll get(T key) {
     if (cnt.count(key)) {
       return cnt[key];
     } else {
       return 0;
     }
+  }
+  pair<T, ull> max() {
+    T key;
+    ull mx = 0;
+    for (auto kv : cnt) {
+      if (kv.second > mx) {
+        mx = kv.second;
+        key = kv.first;
+      }
+    }
+    return make_pair(key, mx);
   }
   typename map<T, ll>::iterator begin() {
     return cnt.begin();
@@ -131,6 +147,8 @@ struct Accumulator {
   // from の後から to までの要素を合計する
   // (from, toは含まれる)
   T sum(int from, int to) {
+    assert(0 <= from && from <= to);
+    assert(to < static_cast<int>(accumulated.size()));
     if (from == 0) {
       return accumulated[to];
     } else {
@@ -158,8 +176,10 @@ struct Accumulator2D {
   // (x1, y1) の後から (x2, y2) までの要素を合計する
   // (x1, y1, x2, y2は含まれる)
   T sum(int x1, int y1, int x2, int y2) {
-    assert(x1 <= x2 && x2 < static_cast<int>(accumulated[0].size()));
-    assert(y1 <= y2 && y2 < static_cast<int>(accumulated.size()));
+    assert(0 <= x1 && x1 <= x2);
+    assert(x2 < static_cast<int>(accumulated[0].size()));
+    assert(0 <= y1 && y1 <= y2);
+    assert(y2 < static_cast<int>(accumulated.size()));
 
     T result = accumulated[y2][x2];
     if (x1 != 0) result -= accumulated[y2][x1 - 1];
@@ -233,6 +253,21 @@ void test_counter() {
   assert(c.cnt == ex);
   assert(c.get(1) == 2);
   assert(c.get(3) == 0);
+}
+
+void test_counter2() {
+  Counter<string> c;
+  vector<string> v = {"a", "bb", "a", "ccc"};
+  c.add(v);
+
+  map<string, ull> ex;
+  ex["a"] = 2;
+  ex["bb"] = 1;
+  ex["ccc"] = 1;
+  assert(c.cnt == ex);
+  assert(c.get("a") == 2);
+  pair<string, ull> p = make_pair("a", 2);
+  assert(c.max() == p);
 }
 
 void test_compressor() {
@@ -324,6 +359,7 @@ int main() {
   test_argsort();
   test_uniquify();
   test_counter();
+  test_counter2();
   test_compressor();
   test_compressor_string();
   test_accumulate();

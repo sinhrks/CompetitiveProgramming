@@ -57,24 +57,24 @@ struct Graph {
 
 template <typename T>
 vector<T> Graph<T>::shortest_path(int src) {
-  priority_queue<Edge<T>> pq;
   vector<T> dist(V, INF);
-  pq.push(Edge<T>(src, src, 0));
   dist[src] = 0;
 
-  while (!pq.empty()) {
-    int u = pq.top().dst;
-    pq.pop();
-
-    for (const auto& e : adj[u]) {
-        int v = e.dst;
-        T weight = e.weight;
-
-        if (dist[v] > dist[u] + weight) {
-          dist[v] = dist[u] + weight;
-          pq.push(Edge<T>(src, e.dst, dist[v]));
+  for (int i = 0; i < V; i++) {
+    bool updated = false;
+    for (int u = 0; u < V; u++) {
+      for (const auto& e : adj[u]) {
+        if (dist[u] != INF && dist[e.dst] > dist[u] + e.weight) {
+          dist[e.dst] = dist[u] + e.weight;
+          updated = true;
+          if (i == V - 1) {
+            dist = vector<T>(V, -INF);
+            return dist;
+          }
         }
+      }
     }
+    if (!updated) break;
   }
   return dist;
 }

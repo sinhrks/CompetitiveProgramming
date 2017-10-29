@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <math.h>
 #include <iostream>
-#include <algorithm>
 #include <vector>
 
 typedef long long ll;
@@ -90,7 +89,7 @@ ll pow(T x, T n) {
 template <typename T>
 ull comb(T n, T k) {
   assert(n >= k);
-  T r = 1;
+  ull r = 1;
   for (ull d = 1; d <= static_cast<ull>(k); ++d) {
     r *= n--;
     r /= d;

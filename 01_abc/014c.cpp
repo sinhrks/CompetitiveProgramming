@@ -20,21 +20,33 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-# define INF 0x3f3f3f3f
-
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
 #define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
 
 using namespace std;
 
+int cum[1000010] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int n;
+  cin >> n;
+  REP(i, n) {
+    int a, b;
+    cin >> a >> b;
+    cum[a]++;
+    cum[b + 1]--;
+  }
+  int mx = 0;
+  int c = 0;
+  REP(i, 1000001) {
+    c += cum[i];
+    mx = max(mx, c);
+  }
 
-  cout << "Yes" << endl;
+  cout << mx << endl;
   return 0;
 }

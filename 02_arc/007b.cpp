@@ -28,13 +28,30 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int disk[110] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
-
-  cout << "Yes" << endl;
+  int N, M;
+  cin >> N >> M;
+  REP(i, N + 1) {
+    disk[i] = i;
+  }
+  REP(i, M) {
+    int d;
+    cin >> d;
+    // cout << disk[0] << " " << disk[d] << endl;
+    REP(j, N + 1) {
+      if (disk[j] == d) {
+        swap(disk[0], disk[j]);
+        break;
+      }
+    }
+  }
+  REP(i, N) {
+    cout << disk[i + 1] << endl;
+  }
   return 0;
 }

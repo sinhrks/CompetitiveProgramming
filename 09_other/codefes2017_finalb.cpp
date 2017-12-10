@@ -32,9 +32,24 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  string S;
+  cin >> S;
 
-  cout << "Yes" << endl;
+  int a = 0;
+  int b = 0;
+  int c = 0;
+  REP(i, S.size()) {
+    if (S[i] == 'a') a++;
+    if (S[i] == 'b') b++;
+    if (S[i] == 'c') c++;
+  }
+
+  int ma = max(a, max(b, c));
+  int mi = min(a, min(b, c));
+  if (ma - mi <= 1) {
+    cout << "YES" << endl;
+  } else {
+    cout << "NO" << endl;
+  }
   return 0;
 }

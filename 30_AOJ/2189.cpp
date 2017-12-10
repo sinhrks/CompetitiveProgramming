@@ -35,6 +35,20 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  REP(x, N) {
+    string S;
+    cin >> S;
+
+    int digits = S.size();
+    int total = 0;
+    REP(i, digits) {
+      total += S[i] - '0';
+    }
+    if ((digits + (total - 1) / 9) % 2 == 0) {
+      cout << "Fabre wins." << endl;
+    } else {
+      cout << "Audrey wins." << endl;
+    }
+  }
   return 0;
 }

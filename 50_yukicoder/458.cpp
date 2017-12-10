@@ -28,6 +28,23 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+template<class T>
+vector<T> eratosthenes(T n) {
+  // ある数が素数でない場合に true
+  vector<bool> dp(n, false);
+  dp[0] = true;
+  dp[1] = true;
+  vector<T> primes;
+  for (int i = 2; i < n; i++) {
+    if (dp[i]) continue;
+    primes.push_back(i);
+    for (int j = i * 2; j < n; j += i) {
+      dp[j] = true;
+    }
+  }
+  return primes;
+}
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
@@ -35,6 +52,21 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  vector<int> primes = eratosthenes(N + 1);
+  int dp[20010] = {};
+  REP(i, N + 1) {
+    dp[i] = -1;
+  }
+  for (auto p : primes) {
+    REPR(i, N) {
+      if (dp[i] > 0 && i + p <= N) {
+        dp[i + p] = max(dp[i + p], dp[i] + 1);
+      }
+    }
+    dp[p] = max(dp[p], 1);
+  }
+
+  cout << dp[N] << endl;
+
   return 0;
 }

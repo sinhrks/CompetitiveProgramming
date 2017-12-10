@@ -28,13 +28,27 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+ll a[100010] = {};
+ll dp[100010] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
   int N;
   cin >> N;
+  REP(i, N) {
+    cin >> a[i];
+    dp[i] = INF;
+  }
+  dp[0] = 0;
+  for (int i = 1; i < N; i++) {
+    if (i - 2 >= 0) {
+      dp[i] = min(dp[i], dp[i - 2] + abs(a[i] - a[i - 2]));
+    }
+    dp[i] = min(dp[i], dp[i - 1] + abs(a[i] - a[i - 1]));
+  }
 
-  cout << "Yes" << endl;
+  cout << dp[N - 1] << endl;
   return 0;
 }

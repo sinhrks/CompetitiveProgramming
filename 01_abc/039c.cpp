@@ -32,9 +32,22 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  string S;
+  cin >> S;
 
-  cout << "Yes" << endl;
+  S = S.substr(0, 12);
+  S = S + S;
+
+  string d("WBWBWWBWBWBW");
+  int p = S.find(d);
+  if (p == 0) cout << "Do";
+  else if (p == 1) cout << "Si";
+  else if (p == 3) cout << "La";
+  else if (p == 5) cout << "So";
+  else if (p == 7) cout << "Fa";
+  else if (p == 8) cout << "Mi";
+  else if (p == 10) cout << "Re";
+
+  cout << endl;
   return 0;
 }

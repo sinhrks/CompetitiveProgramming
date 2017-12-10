@@ -34,7 +34,18 @@ int main() {
 
   int N;
   cin >> N;
+  vector<pair<string, string>> dict;
+  REP(i, N) {
+    string s;
+    cin >> s;
 
-  cout << "Yes" << endl;
+    string orig(s);
+    reverse(s.begin(), s.end());
+    dict.push_back(make_pair(s, orig));
+  }
+  sort(dict.begin(), dict.end());
+  REP(i, N) {
+    cout << dict[i].second << endl;
+  }
   return 0;
 }

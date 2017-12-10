@@ -9,7 +9,6 @@
 #include <functional>
 #include <iostream>
 #include <string>
-#include <array>
 #include <vector>
 #include <stack>
 #include <queue>
@@ -31,10 +30,14 @@ using namespace std;
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
-
   int N;
-  cin >> N;
-
-  cout << "Yes" << endl;
+  while (cin >> N) {
+    if (N == 0) break;
+    if (N <= 2) {
+      cout << "Alice" << endl;
+    } else {
+      cout << "Bob" << endl;
+    }
+  }
   return 0;
 }

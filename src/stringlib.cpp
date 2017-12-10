@@ -99,27 +99,69 @@ struct SuffixArray {
   }
 };
 
-void test_suffix_array() {
-  string q = "abracadabra";
-  SuffixArray sa(q);
-  sa.construct_sa();
+// 最長共通部分列 (LCS)
+int lcs(string X, string Y) {
+  int m = X.size();
+  int n = Y.size();
+  int L[m + 1][n + 1];
+  int i, j;
 
-  vector<int> e = {11, 10, 7, 0, 3, 5, 8, 1, 4, 6, 9, 2};
-  assert(sa.sa == e);
-
-  assert(sa.contain("abra"));
-  assert(!sa.contain("abrad"));
-  assert(sa.contain("cadabra"));
+  for (i = 0; i <= m; i++) {
+    for (j = 0; j <= n; j++) {
+      if (i == 0 || j == 0)
+        L[i][j] = 0;
+      else if (X[i-1] == Y[j-1])
+        L[i][j] = L[i-1][j-1] + 1;
+      else
+        L[i][j] = max(L[i-1][j], L[i][j-1]);
+    }
+  }
+  return L[m][n];
 }
 
-void test_suffix_array_lcp() {
-  string q = "abracadabra";
-  SuffixArray sa(q);
-  sa.construct_sa();
-  sa.construct_lcp();
 
-  vector<int> e = {0, 1, 4, 1, 1, 0, 3, 0, 0, 0, 2, 0};
-  assert(sa.lcp == e);
+//レーベンシュタイン距離を求める
+int levenshtein(string X, string Y) {
+  int m = X.size();
+  int n = Y.size();
+  int d[m + 1][n + 1];
+  int cost = 0;
+
+  for (int i = 0; i <= m; i++) d[i][0] = i;
+  for (int i = 0; i <= n; i++) d[0][i] = i;
+
+  for (int i = 1; i <= m; i++) {
+    for (int j = 1; j <= n; j++) {
+      cost = X[i - 1] == Y[j - 1] ? 0 : 1;
+      d[i][j] = min(min(d[i - 1][j] + 1, d[i][j - 1] + 1),
+                    d[i - 1][j - 1] + cost);
+    }
+  }
+  return d[m][n];
+}
+
+void test_lcs() {
+  string X1("AGGTAB");
+  string Y1("GXTXAYB");
+  assert(lcs(X1, Y1) == 4);
+
+  string X2("AAABB");
+  string Y2("CCDDD");
+  assert(lcs(X2, Y2) == 0);
+
+  string X3("AXBYZVCDDA");
+  string Y3("XXABRCUDABB");
+  assert(lcs(X3, Y3) == 5);
+}
+
+void test_levenshtein() {
+  string X1("ABCD");
+  string Y1("ABXY");
+  assert(levenshtein(X1, Y1) == 2);
+
+  string X2("ABCD");
+  string Y2("AXBXCYD");
+  assert(levenshtein(X2, Y2) == 3);
 }
 
 vector<bool> ambiguous_match(string target, string query, char ignore) {
@@ -142,6 +184,29 @@ vector<bool> ambiguous_match(string target, string query, char ignore) {
     }
   }
   return ans;
+}
+
+void test_suffix_array() {
+  string q = "abracadabra";
+  SuffixArray sa(q);
+  sa.construct_sa();
+
+  vector<int> e = {11, 10, 7, 0, 3, 5, 8, 1, 4, 6, 9, 2};
+  assert(sa.sa == e);
+
+  assert(sa.contain("abra"));
+  assert(!sa.contain("abrad"));
+  assert(sa.contain("cadabra"));
+}
+
+void test_suffix_array_lcp() {
+  string q = "abracadabra";
+  SuffixArray sa(q);
+  sa.construct_sa();
+  sa.construct_lcp();
+
+  vector<int> e = {0, 1, 4, 1, 1, 0, 3, 0, 0, 0, 2, 0};
+  assert(sa.lcp == e);
 }
 
 void test_ambiguous_match() {
@@ -203,6 +268,8 @@ void test_ambiguous_match2() {
 }
 
 int main() {
+  test_lcs();
+  test_levenshtein();
   test_suffix_array();
   test_suffix_array_lcp();
   test_ambiguous_match();

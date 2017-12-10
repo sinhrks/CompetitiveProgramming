@@ -28,13 +28,27 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int get_digits(int x) {
+  int res = 0;
+  while (x > 0) {
+    res += x % 10;
+    x /= 10;
+  }
+  return res;
+}
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int K;
+  cin >> K;
 
-  cout << "Yes" << endl;
+  int ma = INF;
+  for (int i = 2; i <= 10; i++) {
+    ma = min(ma, get_digits(K * i));
+  }
+
+  cout << ma << endl;
   return 0;
 }

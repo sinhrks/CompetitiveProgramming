@@ -20,8 +20,6 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-# define INF 0x3f3f3f3f
-
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
 #define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
@@ -32,9 +30,34 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int N, M;
+  cin >> N >> M;
+  int X, Y;
+  cin >> X >> Y;
 
-  cout << "Yes" << endl;
+  vector<ll> a(N);
+  vector<ll> b(M);
+  REP(i, N) {
+    cin >> a[i];
+  }
+  REP(i, M) {
+    cin >> b[i];
+  }
+  ll total = 0;
+  ll current = 0;
+  while (true) {
+    int i = lower_bound(a.begin(), a.end(), current) - a.begin();
+    if (i >= a.size()) break;
+    current = a[i];
+    current += X;
+
+    i = lower_bound(b.begin(), b.end(), current) - b.begin();
+    if (i >= b.size()) break;
+    current = b[i];
+    current += Y;
+    total++;
+  }
+
+  cout << total << endl;
   return 0;
 }

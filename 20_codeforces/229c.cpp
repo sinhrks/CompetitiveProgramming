@@ -28,13 +28,27 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int v[1000010] = {};
+
 int main() {
-  cin.tie(0);
-  ios::sync_with_stdio(false);
+  int N, M;
+  scanf("%d %d", &N, &M);
 
-  int N;
-  cin >> N;
+  REP(i, M) {
+    int a, b;
+    scanf("%d %d", &a, &b);
+    a--;
+    b--;
+    v[a]++;
+    v[b]++;
+  }
+  ll total = 0;
+  total = N * (N - 1LL) * (N - 2LL) / 6LL;
+  ll broken = 0;
+  REP(i, N) {
+    broken += v[i] * (N - 1 - v[i]);
+  }
 
-  cout << "Yes" << endl;
+  cout << total - broken / 2 << endl;
   return 0;
 }

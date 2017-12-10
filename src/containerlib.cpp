@@ -189,6 +189,96 @@ struct Accumulator2D {
   }
 };
 
+template <typename T>
+struct SegTree {
+  // 要素数に対して必要な2進数の桁数を指定
+  int N;
+  vector<T> data;
+  // 初期化に使う値を定義 (要変更)
+  int init = 0;
+
+  explicit SegTree(int n_) {
+    N = 1;
+    while (N < n_) {
+      N *= 2;
+    }
+    data = vector<T>(2 * N - 1, init);
+  }
+  // 二つの区間の更新規則を定義 (要変更)
+  T update_rule(T v1, T v2) {
+    return v1 + v2;
+  }
+  // i番目 (0-indexed) の値を変更
+  void update(int i, T val) {
+    assert(0 <= i && i < N);
+    i += N - 1;
+    data[i] = val;
+    while (i > 0) {
+      i = (i - 1) / 2;
+      data[i] = update_rule(data[i * 2 + 1], data[i * 2 + 2]);
+    }
+  }
+  T query(T a, T b) {
+    return internal_query(a, b, 0, 0, N);
+  }
+  T internal_query(T a, T b, int k, int l, int r) {
+    if (r <= a || b <= l) return init;
+    if (a <= l && r <= b) {
+      return data[k];
+    } else {
+      int vl = internal_query(a, b, k * 2 + 1, l, (l + r) / 2);
+      int vr = internal_query(a, b, k * 2 + 2, (l + r) / 2, r);
+      return update_rule(vl, vr);
+    }
+  }
+};
+
+template <typename T>
+struct BIT {
+  int N;
+  vector<T> data;
+
+  explicit BIT(int n_) {
+    N = 1;
+    while (N < n_) {
+      N *= 2;
+    }
+    data = vector<T>(N, 0);
+  }
+  T sum(T i) {
+    T s = 0;
+    while (i > 0) {
+      s += data[i];
+      // LSBを減算
+      i -= i & -i;
+    }
+    return s;
+  }
+  // i番目 (1-indexed) の値を変更
+  void add(int i, T val) {
+    while (i <= N) {
+      data[i] += val;
+      // LSBに加算
+      i += i & -i;
+    }
+  }
+  // 指定された値以上の要素が最初に現れる位置を返す
+  T lower_bound(T val) {
+    T tv = 0;
+    int ent = 0;
+    for (int i = __builtin_ctz(N); i >= 0; i--) {
+      if (tv + data[ent + (1 << i)] < val) {
+        tv += data[ent + (1 << i)];
+        ent += (1 << i);
+      }
+    }
+    if (tv < val) {
+      ent++;
+    }
+    return ent;
+  }
+};
+
 void test_inverse() {
   map<int, int> input;
   input[1] = 3;

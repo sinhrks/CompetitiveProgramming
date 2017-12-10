@@ -171,7 +171,7 @@ getline(cin, s);
 
 - 逆順
   ```
-  REPR(i, a.size) {
+  REPR(i, a.size - 1) {
     cout << a[i] << endl;
   }
   ```
@@ -261,7 +261,7 @@ getline(cin, s);
   };
   ```
 - メモ化再帰
-- 動的計画法（DP）（確率DP，ビットDPを含む）
+- 動的計画法（DP）
 - 累積和 [containerlib.cpp](src/containerlib.cpp)
 - いもす法
   ```
@@ -281,11 +281,29 @@ getline(cin, s);
   }
   ```
 - しゃくとり法
+
+```
+int current = 0;
+int li = 0;
+int ri = 0;
+while (li < N && ri < N) {
+  while (liが条件を満たす && li < N) {
+    current に v[li] を追加する処理;
+    li++;
+  }
+  区間が条件を満たす場合 求めたい値を更新;
+  current から v[ri] を除外する処理;
+  ri++;
+}
+```
+
 - 二分探索 (最小値、最大値)
   - `lower_bound(a.begin(), a.end(), k)` k以上の値が初めて現れる位置へのイテレータ
   - `upper_bound(a.begin(), a.end(), k)` kより大きい値が初めて現れる位置へのイテレータ
     - 位置を取りたい場合は `it - a.begin()`
-    - ある値の個数 `lower_bound(a.begin(), a.end(), k) - upper_bound(a.begin(), a.end(), k)`
+    - ある値の個数 `lower_bound(a, a + N, x) - upper_bound(a, a + N, x)`
+    - x より真に小さい値の個数 `lower_bound(a, a + N, x) - a`
+    - x より真に大きい値の個数 `N - (upper_bound(a, a + N, x) - a)`
 
   ```
   ll binary_search(ll low, ll high, std::function<bool(ll)> check){
@@ -318,94 +336,7 @@ getline(cin, s);
 - ダブリング（数列）
 - Union-Find木 [graphlib.cpp](src/graphlib.cpp)
 - セグメント木（遅延評価なし）
-  ```
-  template <typename T>
-  struct SegTree {
-    // 要素数に対して必要な2進数の桁数を指定
-    int N;
-    vector<T> data;
-    // 初期化に使う値を定義 (要変更)
-    int init = 0;
-
-    explicit SegTree(int n_) {
-      N = 1;
-      while (N < n_) {
-        N *= 2;
-      }
-      data = vector<T>(2 * N - 1, init);
-    }
-    // 二つの区間の更新規則を定義 (要変更)
-    T update_rule(T v1, T v2) {
-      return v1 + v2;
-    }
-    void update(int i, T val) {
-      i += N - 1;
-      data[i] = val;
-      while (i > 0) {
-        i = (i - 1) / 2;
-        data[i] = update_rule(data[i * 2 + 1], data[i * 2 + 2]);
-      }
-    }
-    T query(T a, T b) {
-      return internal_query(a, b, 0, 0, N);
-    }
-    T internal_query(T a, T b, int k, int l, int r) {
-      if (r <= a || b <= l) return init;
-      if (a <= l && r <= b) {
-        return data[k];
-      } else {
-        int vl = internal_query(a, b, k * 2 + 1, l, (l + r) / 2);
-        int vr = internal_query(a, b, k * 2 + 2, (l + r) / 2, r);
-        return update_rule(vl, vr);
-      }
-    }
-  };
-  ```
 - BIT
-  ```
-  template <typename T>
-  struct BIT {
-    int N;
-    vector<T> data;
-
-    explicit BIT(int n_) {
-      N = 1;
-      while (N < n_) {
-        N *= 2;
-      }
-      data = vector<T>(N, 0);
-    }
-    T sum(T i) {
-      T s = 0;
-      while (i > 0) {
-        s += data[i];
-        i -= i & -i;
-      }
-      return s;
-    }
-    void add(int i, T val) {
-      while (i <= N) {
-        data[i] += val;
-        i += i & -i;
-      }
-    }
-    // 指定された値以上の要素が最初に現れる位置を返す
-    T lower_bound(T val) {
-      T tv = 0;
-      int ent = 0;
-      for (int i = __builtin_ctz(N); i >= 0; i--) {
-        if (tv + data[ent + (1 << i)] < val) {
-          tv += data[ent + (1 << i)];
-          ent += (1 << i);
-        }
-      }
-      if (tv < val) {
-        ent++;
-      }
-      return ent;
-    }
-  };
-  ```
 
 # STL(標準テンプレートライブラリ)
 
@@ -470,171 +401,10 @@ int dy[8] = {0, 1, 1, 1, 0, -1, -1, -1};
 
 # 平面幾何
 
-```
-using namespace std;
+-[geomlib.cpp](src/geomlib.cpp)
 
-const double EPS = 1e-8;
-// const double INF = 1e12;
 
-typedef complex<double> Point;
-
-namespace std {
-  bool operator < (const Point& a, const Point& b) {
-    return real(a) != real(b) ? real(a) < real(b) : imag(a) < imag(b);
-  }
-}
-
-// 内積
-double dot(const Point& a, const Point& b) {
-  return real(conj(a) * b);
-}
-
-// 外積
-double cross(const Point& a, const Point& b) {
-  return imag(conj(a) * b);
-}
-
-// 直線、線分
-struct Line : public vector<Point> {
-  Line(const Point &a, const Point &b) {
-    push_back(a);
-    push_back(b);
-  }
-};
-
-// 単純多角形 (反時計回り)
-typedef vector<Point> Polygon;
-
-// 円
-struct Circle {
-  Point p;
-  double r;
-  Circle(const Point &p, double r) : p(p), r(r) { }
-};
-
-// Counter Clockwise
-int ccw(Point a, Point b, Point c) {
-  b -= a;
-  c -= a;
-  if (cross(b, c) > 0)   return +1;       // counter clockwise
-  if (cross(b, c) < 0)   return -1;       // clockwise
-  if (dot(b, c) < 0)     return +2;       // c--a--b on line
-  if (norm(b) < norm(c)) return -2;       // a--b--c on line
-  return 0;
-}
-
-// 直線と直線が交差するか
-bool intersectLL(const Line &l, const Line &m) {
-  return abs(cross(l[1] - l[0], m[1] - m[0])) > EPS ||  // non-parallel
-         abs(cross(l[1] - l[0], m[0] - l[0])) < EPS;    // same line
-}
-
-// 直線と線分が交差するか
-bool intersectLS(const Line &l, const Line &s) {
-  return cross(l[1] - l[0], s[0] - l[0]) *        // s[0] is left of l
-         cross(l[1] - l[0], s[1] - l[0]) < EPS;   // s[1] is right of l
-}
-
-// 直線と点が交差するか
-bool intersectLP(const Line &l, const Point &p) {
-  return abs(cross(l[1] - p, l[0] - p)) < EPS;
-}
-
-// 線分と線分が交差するか
-bool intersectSS(const Line &s, const Line &t) {
-  return ccw(s[0], s[1], t[0]) * ccw(s[0], s[1], t[1]) <= 0 &&
-         ccw(t[0], t[1], s[0]) * ccw(t[0], t[1], s[1]) <= 0;
-}
-
-// 線分と点が交差するか
-bool intersectSP(const Line &s, const Point &p) {
-  // triangle inequality
-  return abs(s[0] - p) + abs(s[1] - p) - abs(s[1] - s[0]) < EPS;
-}
-
-// 点の直線への射影
-Point projection(const Line &l, const Point &p) {
-  double t = dot(p - l[0], l[0] - l[1]) / norm(l[0] - l[1]);
-  return l[0] + t * (l[0] - l[1]);
-}
-
-// 点の直線に対する反射点
-Point reflection(const Line &l, const Point &p) {
-  return p + 2.0 * (projection(l, p) - p);
-}
-
-// 直線と点の距離
-double distanceLP(const Line &l, const Point &p) {
-  return abs(p - projection(l, p));
-}
-
-// 直線と直線の距離
-double distanceLL(const Line &l, const Line &m) {
-  return intersectLL(l, m) ? 0 : distanceLP(l, m[0]);
-}
-
-// 直線と線分の距離
-double distanceLS(const Line &l, const Line &s) {
-  if (intersectLS(l, s)) return 0;
-  return min(distanceLP(l, s[0]), distanceLP(l, s[1]));
-}
-
-// 線分と点の距離
-double distanceSP(const Line &s, const Point &p) {
-  const Point r = projection(s, p);
-  if (intersectSP(s, r)) return abs(r - p);
-  return min(abs(s[0] - p), abs(s[1] - p));
-}
-
-// 線分と線分の距離
-double distanceSS(const Line &s, const Line &t) {
-  if (intersectSS(s, t)) return 0;
-  return min(min(distanceSP(s, t[0]), distanceSP(s, t[1])),
-             min(distanceSP(t, s[0]), distanceSP(t, s[1])));
-}
-
-Point crosspoint(const Line &l, const Line &m) {
-  double A = cross(l[1] - l[0], m[1] - m[0]);
-  double B = cross(l[1] - l[0], l[1] - m[0]);
-  if (abs(A) < EPS && abs(B) < EPS) return m[0];  // same line
-  return m[0] + B / A * (m[1] - m[0]);
-}
-
-// 平面操作法 (線分)
-struct event {
-  double x;
-  int type;
-  Line seg;
-  event(double x, int type, const Line& seg) :
-    x(x), type(type), seg(seg) { }
-  bool operator < (const event &e) const {
-    return x != e.x ? x > e.x : type > e.type;
-  }
-};
-
-int segment_intersects(const vector<Line>& segs) {
-  priority_queue<event> Q;
-  for (int i = 0; i < segs.size(); ++i) {
-    double x1 = real(segs[i][0]), x2 = real(segs[i][1]);
-    Q.push(event(min(x1, x2), 0, segs[i]));
-    Q.push(event(max(x1, x2), 1, segs[i]));
-  }
-  int count = 0;
-  set<Line> T;
-  while (!Q.empty()) {
-    event e = Q.top(); Q.pop();
-    if (e.type == 0) {
-      for (set<Line>::iterator itr = T.begin();
-          itr != T.end(); ++itr)
-        if (intersectLS(*itr, e.seg)) {
-          // *out++ = crosspoint(*itr, e.seg);
-          ++count;
-        }
-      T.insert(e.seg);
-    } else {
-      T.erase(e.seg);
-    }
-  }
-  return count;
-}
-```
+- 三角形の面積
+  ```
+  abs((xa - xc) * (yb - yc) - (xb - xc) * (ya - yc)) / 2.0
+  ```

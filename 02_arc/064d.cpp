@@ -20,8 +20,6 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-# define INF 0x3f3f3f3f
-
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
 #define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
@@ -32,9 +30,12 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
-
-  cout << "Yes" << endl;
+  string s;
+  cin >> s;
+  if (s[0] == s[s.size() - 1] ^ s.size() % 2 == 1) {
+    cout << "First" << endl;
+  } else {
+    cout << "Second" << endl;
+  }
   return 0;
 }

@@ -28,6 +28,9 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+bool F[10][110] = {};
+int P[11][110] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
@@ -35,6 +38,31 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  REP(i, N) {
+    REP(j, 10) {
+      cin >> F[j][i];
+    }
+  }
+  REP(i, N) {
+    REP(j, 11) {
+      cin >> P[j][i];
+    }
+  }
+  int ma = -(1 << 30);
+  for (int i = 1; i < (1 << 10); i++) {
+    int m = 0;
+    REP(j, N) {
+      int c = 0;
+      REP(k, 10) {
+        if ((i & (1 << k)) > 0 && F[k][j]) {
+          c++;
+        }
+      }
+      m += P[c][j];
+    }
+    ma = max(ma, m);
+  }
+
+  cout << ma << endl;
   return 0;
 }

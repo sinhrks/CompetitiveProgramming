@@ -28,13 +28,37 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int board[510][510] = {};
+int ans[510][510] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
-
-  cout << "Yes" << endl;
+  int N, M;
+  cin >> N >> M;
+  REP(i, N) {
+    string s;
+    cin >> s;
+    REP(j, M) {
+      board[i][j] = s[j] - '0';
+    }
+  }
+  REP(i, N) {
+    REP(j, M) {
+      if (board[i][j] > 0) {
+        ans[i + 1][j] = board[i][j];
+        board[i + 1][j - 1] -= board[i][j];
+        board[i + 1][j + 1] -= board[i][j];
+        board[i + 2][j] -= board[i][j];
+      }
+    }
+  }
+  REP(i, N) {
+    REP(j, M) {
+      cout << ans[i][j];
+    }
+    cout << endl;
+  }
   return 0;
 }

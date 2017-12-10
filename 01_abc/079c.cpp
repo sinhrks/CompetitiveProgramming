@@ -20,8 +20,6 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-# define INF 0x3f3f3f3f
-
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
 #define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
@@ -34,7 +32,21 @@ int main() {
 
   int N;
   cin >> N;
+  int D = N % 10;
+  N /= 10;
+  int C = N % 10;
+  N /= 10;
+  int B = N % 10;
+  N /= 10;
+  int A = N % 10;
 
-  cout << "Yes" << endl;
+  if (A + B + C + D == 7) printf("%d+%d+%d+%d=7\n", A, B, C, D);
+  else if (A - B + C + D == 7) printf("%d-%d+%d+%d=7\n", A, B, C, D);
+  else if (A + B - C + D == 7) printf("%d+%d-%d+%d=7\n", A, B, C, D);
+  else if (A - B - C + D == 7) printf("%d-%d-%d+%d=7\n", A, B, C, D);
+  else if (A + B + C - D == 7) printf("%d+%d+%d-%d=7\n", A, B, C, D);
+  else if (A - B + C - D == 7) printf("%d-%d+%d-%d=7\n", A, B, C, D);
+  else if (A + B - C - D == 7) printf("%d+%d-%d-%d=7\n", A, B, C, D);
+  else if (A - B - C - D == 7) printf("%d-%d-%d-%d=7\n", A, B, C, D);
   return 0;
 }

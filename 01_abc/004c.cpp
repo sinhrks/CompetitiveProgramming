@@ -20,13 +20,13 @@
 typedef long long ll;
 typedef unsigned long long ull;
 
-# define INF 0x3f3f3f3f
-
 #define REP(i, n) for (int i = 0; i < n; i++)
 #define REPR(i, n) for (int i = n; i >= 0; i--)
 #define DEBUG(vec) for (auto v : vec) { cout << v << " "; } cout << endl;
 
 using namespace std;
+
+int cards[6] = {1, 2, 3, 4, 5, 6};
 
 int main() {
   cin.tie(0);
@@ -35,6 +35,14 @@ int main() {
   int N;
   cin >> N;
 
-  cout << "Yes" << endl;
+  N %= 30;
+  REP(i, N) {
+    swap(cards[i % 5], cards[i % 5 + 1]);
+  }
+
+  REP(i, 6) {
+    cout << cards[i];
+  }
+  cout << endl;
   return 0;
 }

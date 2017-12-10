@@ -61,6 +61,7 @@ struct Graph {
   }
   // 辺の重みを取得
   T get_weight(int src, int dst) {
+    if (src == dst) return 0;
     for (const auto& e : adj[src]) {
       if (e.dst == dst) {
         return e.weight;
@@ -231,7 +232,7 @@ pair<vector<bool>, vector<T>> Graph<T>::shortest_path_neg(int src) {
 // 全点対間最小路 (Floyd Warshall)
 template <typename T>
 vector<vector<T>> Graph<T>::shortest_paths() {
-
+  // dist[src][dst]に対応する距離が入る
   vector<vector<T>> dist = vector<vector<T>>(V, vector<T>(V, INF));
 
   for (int i = 0; i < V; i++) {
@@ -435,6 +436,10 @@ struct FlowGraph {
 
 void test_connected_directed() {
   Graph<int> g(3, true);
+
+  assert(g.get_weight(0, 0) == 0);
+  assert(g.get_weight(2, 2) == 0);
+  assert(g.get_weight(1, 2) == INF);
 
   g.add_edge(0, 1, 1);
   assert(g.has_edge(0, 1));

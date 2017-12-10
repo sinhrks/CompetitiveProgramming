@@ -32,9 +32,25 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int N, R;
+  cin >> N >> R;
+  string S;
+  cin >> S;
 
-  cout << "Yes" << endl;
+  int ans = 0;
+  REPR(i, S.size() - 1) {
+    if (S[i] == '.') {
+      ans += max(0, i - R + 1);
+      break;
+    }
+  }
+  for (int i = S.size() - 1; i >= 0; i--) {
+    if (S[i] == '.') {
+      ans++;
+      i -= R - 1;
+    }
+  }
+
+  cout << ans << endl;
   return 0;
 }

@@ -32,9 +32,28 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  string S;
+  cin >> S;
 
-  cout << "Yes" << endl;
+  if (S == "AKIHABARA" ||
+      S == "KIHABARA" ||
+      S == "AKIHBARA" ||
+      S == "AKIHABRA" ||
+      S == "AKIHABAR" ||
+      S == "KIHBARA" ||
+      S == "KIHABRA" ||
+      S == "KIHABAR" ||
+      S == "AKIHBRA" ||
+      S == "AKIHBAR" ||
+      S == "AKIHABR" ||
+      S == "KIHBRA" ||
+      S == "KIHBAR" ||
+      S == "KIHABR" ||
+      S == "AKIHBR" ||
+      S == "KIHBR") {
+    cout << "YES" << endl;
+  } else {
+    cout << "NO" << endl;
+  }
   return 0;
 }

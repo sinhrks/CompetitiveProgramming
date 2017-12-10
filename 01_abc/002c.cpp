@@ -32,9 +32,9 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int xa, ya, xb, yb, xc, yc;
+  cin >> xa >> ya >> xb >> yb >> xc >> yc;
 
-  cout << "Yes" << endl;
+  printf("%.10f\n", abs((xa - xc) * (yb - yc) - (xb - xc) * (ya - yc)) / 2.0);
   return 0;
 }

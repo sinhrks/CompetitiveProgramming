@@ -46,15 +46,15 @@ vector<T> eratosthenes(T n) {
   vector<bool> dp(n, false);
   dp[0] = true;
   dp[1] = true;
-  vector<T> prime;
+  vector<T> primes;
   for (int i = 2; i < n; i++) {
     if (dp[i]) continue;
-    prime.push_back(i);
+    primes.push_back(i);
     for (int j = i * 2; j < n; j += i) {
       dp[j] = true;
     }
   }
-  return prime;
+  return primes;
 }
 
 // 素因数分解
@@ -191,6 +191,16 @@ struct FactorialTable {
     return comb(n + k - 1, k);
   }
 };
+
+// 数値の桁数を求める
+int get_digits(ll x) {
+  int res = 0;
+  while (x > 0) {
+    x /= 10;
+    res++;
+  }
+  return res;
+}
 
 void test_gcd_lcm() {
   assert(gcd(3, 2) == 1);
@@ -341,6 +351,15 @@ void test_factorial_table() {
   assert(f3.mcomb(5, 2) == 15);
 }
 
+void test_digits() {
+  assert(get_digits(0) == 0);
+  assert(get_digits(1) == 1);
+  assert(get_digits(9) == 1);
+  assert(get_digits(10) == 2);
+  assert(get_digits(19) == 2);
+  assert(get_digits(100) == 3);
+}
+
 int main() {
   test_gcd_lcm();
   test_prime();
@@ -349,6 +368,7 @@ int main() {
   test_comb();
   test_modnum();
   test_factorial_table();
+  test_digits();
 
   cout << "SUCCESS!!" << endl;
   return 0;

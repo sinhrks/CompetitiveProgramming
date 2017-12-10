@@ -32,9 +32,30 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int N, W;
+  cin >> N >> W;
 
-  cout << "Yes" << endl;
+  int v[110] = {};
+  int w[110] = {};
+
+  REP(i, N) {
+    cin >> v[i] >> w[i];
+  }
+  int dp[10010] = {};
+
+  REP(i, N) {
+    REPR(j, W) {
+      if (dp[j] > 0 && j + w[i] <= W) {
+        dp[j + w[i]] = max(dp[j + w[i]], dp[j] + v[i]);
+      }
+    }
+    dp[w[i]] = max(dp[w[i]], v[i]);
+  }
+  int ma = 0;
+  REP(i, W + 1) {
+    ma = max(dp[i], ma);
+  }
+
+  cout << ma << endl;
   return 0;
 }

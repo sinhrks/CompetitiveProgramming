@@ -28,13 +28,31 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int T[30][200010] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  int N, C;
+  cin >> N >> C;
+  REP(i, N) {
+    int s, t, c;
+    cin >> s >> t >> c;
+    c--;
+    for (int j = s * 2 - 1; j <= t * 2; j++) {
+      T[c][j] = 1;
+    }
+  }
+  int ma = 0;
+  REP(i, 200010) {
+    int c = 0;
+    REP(j, C) {
+      c += T[j][i];
+    }
+    ma = max(ma, c);
+  }
 
-  cout << "Yes" << endl;
+  cout << ma << endl;
   return 0;
 }

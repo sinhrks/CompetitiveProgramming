@@ -34,11 +34,12 @@ int main() {
 
   int Deg, Dis;
   cin >> Deg >> Dis;
-  Deg = Deg * 10;
-  int win = (int)(Dis / 6.0 + 0.5);
+  Deg *= 10;
+  int win = Dis * 100;
 
-  if (win <= 2) cout << "C";
-  else if (1125 <= Deg && Deg < 3375) cout << "NNE";
+  if (win < 25 * 60) cout << "C";
+  else if (Deg < 1125) cout << "N";
+  else if (Deg < 3375) cout << "NNE";
   else if (Deg < 5625) cout << "NE";
   else if (Deg < 7875) cout << "ENE";
   else if (Deg < 10125) cout << "E";
@@ -57,18 +58,18 @@ int main() {
 
   cout << " ";
 
-  if (win <= 2) cout << 0;
-  else if (win <= 15) cout << 1;
-  else if (win <= 33) cout << 2;
-  else if (win <= 54) cout << 3;
-  else if (win <= 79) cout << 4;
-  else if (win <= 107) cout << 5;
-  else if (win <= 138) cout << 6;
-  else if (win <= 171) cout << 7;
-  else if (win <= 207) cout << 8;
-  else if (win <= 244) cout << 9;
-  else if (win <= 284) cout << 10;
-  else if (win <= 326) cout << 11;
+  if (win < 25 * 60) cout << 0;
+  else if (win < 155 * 60) cout << 1;
+  else if (win < 335 * 60) cout << 2;
+  else if (win < 545 * 60) cout << 3;
+  else if (win < 795 * 60) cout << 4;
+  else if (win < 1075 * 60) cout << 5;
+  else if (win < 1385 * 60) cout << 6;
+  else if (win < 1715 * 60) cout << 7;
+  else if (win < 2075 * 60) cout << 8;
+  else if (win < 2445 * 60) cout << 9;
+  else if (win < 2845 * 60) cout << 10;
+  else if (win < 3265 * 60) cout << 11;
   else cout << 12;
 
   cout << endl;

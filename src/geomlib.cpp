@@ -19,19 +19,40 @@ namespace std {
 }
 
 // 内積
-double dot(const Point& a, const Point& b) {
+inline double dot(const Point& a, const Point& b) {
   return real(conj(a) * b);
 }
 
 // 外積
-double cross(const Point& a, const Point& b) {
+inline double cross(const Point& a, const Point& b) {
   return imag(conj(a) * b);
 }
 
 // 2点間の距離
-double dist(Point a, Point b) {
+inline double dist(Point a, Point b) {
   b -= a;
   return sqrt(dot(b, b));
+}
+
+// 直線
+struct Line {
+  Point a;
+  Point b;
+  explicit Line(Point a, Point b) {
+    this->a = a;
+    this->b = b;
+  }
+  inline double length() {
+    return dist(a, b);
+  }
+};
+
+// 点と直線の距離
+double dist(Point p, Line l) {
+  Point p1 = p - l.a;
+  Point p2 = l.b - l.a;
+  double len = l.length();
+  return abs(cross(p1, p2)) / len;
 }
 
 // 線分
@@ -42,16 +63,24 @@ struct LineSegment {
     this->a = a;
     this->b = b;
   }
-  double length() {
+  inline double length() {
     return dist(a, b);
   }
 };
 
 // 点と線分の距離
-double dist(Point p, LineSegment b) {
-  Point p1 = p - b.a;
-  Point p2 = b.b - b.a;
-  return abs(cross(p1, p2)) / b.length();
+double dist(Point p, LineSegment l) {
+  Point p1 = p - l.a;
+  Point p2 = l.b - l.a;
+  double ip = dot(p1, p2);
+  double len = l.length();
+  if (ip / len < 0) {
+    return dist(l.a, p);
+  } else if (ip / len > len) {
+    return dist(l.b, p);
+  } else {
+    return abs(cross(p1, p2)) / len;
+  }
 }
 
 void test_dot() {
@@ -72,9 +101,36 @@ void test_dist() {
   fassert(dist(Point(1, 1), Point(2, 4)), 3.1622776601683795);
 }
 
+void test_line() {
+  Line l(Point(0, 0), Point(3, 4));
+}
+
+void test_line_dist() {
+  Line l(Point(2, 2), Point(5, 5));
+
+  fassert(dist(Point(1, 1), l), 0.0);
+  fassert(dist(Point(1, 2), l), sqrt(2) / 2.0);
+  fassert(dist(Point(2, 3), l), sqrt(2) / 2.0);
+  fassert(dist(Point(2, 4), l), sqrt(2));
+  fassert(dist(Point(6, 6), l), 0.0);
+  fassert(dist(Point(5, 6), l), sqrt(2) / 2.0);
+}
+
 void test_linesegment() {
   LineSegment ls(Point(0, 0), Point(3, 4));
   fassert(ls.length(), 5.0);
+}
+
+void test_linesegment_dist() {
+  LineSegment ls(Point(2, 2), Point(5, 5));
+  fassert(ls.length(), sqrt(18));
+
+  fassert(dist(Point(1, 1), ls), sqrt(2));
+  fassert(dist(Point(1, 2), ls), 1.0);
+  fassert(dist(Point(2, 3), ls), sqrt(2) / 2.0);
+  fassert(dist(Point(2, 4), ls), sqrt(2));
+  fassert(dist(Point(6, 6), ls), sqrt(2));
+  fassert(dist(Point(5, 6), ls), 1.0);
 }
 
 /*
@@ -229,7 +285,11 @@ int main() {
   test_cross();
   test_dist();
 
+  test_line();
+  test_line_dist();
+
   test_linesegment();
+  test_linesegment_dist();
 
   cout << "SUCCESS!!" << endl;
   return 0;

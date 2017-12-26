@@ -32,13 +32,25 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N, L;
+  cin >> N >> L;
+  string S;
+  cin >> S;
+
+  int tab = 1;
+  int crush = 0;
+  REP(i, N) {
+    if (S[i] == '+') {
+      tab++;
+      if (tab > L) {
+        crush++;
+        tab = 1;
+      }
+    } else {
+      tab--;
+    }
   }
-  cout << cnt << endl;
+
+  cout << crush << endl;
   return 0;
 }

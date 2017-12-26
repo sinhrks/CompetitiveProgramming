@@ -32,13 +32,15 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N;
+  cin >> N;
+
+  int ans = 0;
+  for (int i = 1; i <= N; i++) {
+    REP(j, N - i + 1) {
+      ans++;
+    }
   }
-  cout << cnt << endl;
+  cout << ans << endl;
   return 0;
 }

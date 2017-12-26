@@ -32,13 +32,15 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  string S;
+  cin >> S;
+  REP(i, S.size() / 2) {
+    if (S[i] != S[S.size() - i - 1]) {
+      cout << "NO" << endl;
+      return 0;
+    }
   }
-  cout << cnt << endl;
+
+  cout << "YES" << endl;
   return 0;
 }

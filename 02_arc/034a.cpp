@@ -32,13 +32,16 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N;
+  cin >> N;
+
+  double ans = 0.0;
+  REP(i, N) {
+    int a, b, c, d, e;
+    cin >> a >> b >> c >> d >> e;
+    ans = max(ans, a + b + c + d + e * 110.0 / 900.0);
   }
-  cout << cnt << endl;
+
+  printf("%.10f\n", ans);
   return 0;
 }

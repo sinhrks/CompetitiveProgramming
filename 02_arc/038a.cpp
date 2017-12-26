@@ -28,17 +28,24 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int a[1000] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N;
+  cin >> N;
+  REP(i, N) {
+    cin >> a[i];
   }
-  cout << cnt << endl;
+  sort(a, a + N, greater<int>());
+
+  int ans = 0;
+  REP(i, N) {
+    if (i % 2 == 0) ans += a[i];
+  }
+
+  cout << ans << endl;
   return 0;
 }

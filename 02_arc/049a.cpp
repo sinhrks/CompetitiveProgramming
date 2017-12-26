@@ -32,13 +32,19 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  string S;
+  cin >> S;
+  int A, B, C, D;
+  cin >> A >> B >> C >> D;
+
+  REP(i, S.size() + 1) {
+    if (i == A || i == B || i == C || i == D) {
+      cout << '"';
+    }
+    if (i < S.size()) {
+      cout << S[i];
+    }
   }
-  cout << cnt << endl;
+  cout << endl;
   return 0;
 }

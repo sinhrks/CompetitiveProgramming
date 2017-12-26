@@ -9,6 +9,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <array>
 #include <vector>
 #include <stack>
@@ -28,17 +29,35 @@ typedef unsigned long long ull;
 
 using namespace std;
 
-int main() {
-  cin.tie(0);
-  ios::sync_with_stdio(false);
-
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+vector<string> split(const string &s, char delim) {
+  vector<string> elems;
+  stringstream ss(s);
+  string item;
+  while (getline(ss, item, delim)) {
+    if (!item.empty()) {
+      elems.push_back(item);
+    }
   }
-  cout << cnt << endl;
+  return elems;
+}
+
+int main() {
+  string S;
+  getline(cin, S);
+
+  vector<string> orders = split(S, ' ');
+  REP(i, orders.size()) {
+    string o = orders[i];
+    if (o == "Left") {
+      cout << "<";
+    } else if (o == "Right") {
+      cout << ">";
+    } else {
+      cout << "A";
+    }
+
+    if (i < orders.size() - 1) cout << " ";
+  }
+  cout << endl;
   return 0;
 }

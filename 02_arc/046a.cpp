@@ -28,17 +28,33 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+bool is_zoro(int n) {
+  int z = n % 10;
+  while (n > 0) {
+    if (n % 10 != z) {
+      return false;
+    }
+    n /= 10;
+  }
+  return true;
+}
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N;
+  cin >> N;
+
+  int num = 0;
+  for (int i = 1; ; i++) {
+    if (is_zoro(i)) {
+      num++;
+      if (num == N) {
+        cout << i << endl;
+        return 0;
+      }
+    }
   }
-  cout << cnt << endl;
   return 0;
 }

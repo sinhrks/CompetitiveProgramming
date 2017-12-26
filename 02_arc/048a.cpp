@@ -32,9 +32,12 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
-
-  cout << "Yes" << endl;
+  ll A, B;
+  cin >> A >> B;
+  if ((A > 0 && B > 0) || (A < 0 && B < 0)) {
+    cout << B - A << endl;
+  } else {
+    cout << abs(A) + B - 1 << endl;
+  }
   return 0;
 }

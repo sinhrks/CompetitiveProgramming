@@ -32,9 +32,17 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  int N;
-  cin >> N;
+  string S;
+  cin >> S;
 
-  cout << "Yes" << endl;
+  REP(i, S.size() / 2) {
+    if (S[i] != S[S.size() - i - 1] &&
+        S[i] != '*' && S[S.size() - i - 1] != '*') {
+      cout << "NO" << endl;
+      return 0;
+    }
+  }
+
+  cout << "YES" << endl;
   return 0;
 }

@@ -28,17 +28,42 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+// 素因数分解
+vector<ll> get_primes(ll n) {
+  vector<ll> result;
+
+  for (ll i = 2; i <= sqrt(n); i++) {
+    while ((n % i) == 0) {
+      result.push_back(i);
+      n /= i;
+    }
+  }
+  if (n > sqrt(n)) {
+    result.push_back(n);
+  }
+  return result;
+}
+
+int counts[1001] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N;
+  cin >> N;
+
+  for (int i = 1; i <= N; i++) {
+    vector<ll> primes = get_primes(i);
+    for (auto prime : primes) {
+      counts[prime]++;
+    }
   }
-  cout << cnt << endl;
+  ll ans = 1;
+  REP(i, 1001) {
+    ans *= counts[i] + 1;
+    ans %= 1000000007;
+  }
+  cout << ans << endl;
   return 0;
 }

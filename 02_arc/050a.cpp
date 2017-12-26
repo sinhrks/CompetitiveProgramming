@@ -32,13 +32,13 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  char C, c;
+  cin >> C >> c;
+
+  if (C == toupper(c)) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
   }
-  cout << cnt << endl;
   return 0;
 }

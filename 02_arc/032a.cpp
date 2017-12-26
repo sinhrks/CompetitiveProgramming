@@ -28,17 +28,41 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+
+template<class T>
+bool is_prime(T n) {
+  switch (n) {
+    case 0: return false;
+    case 1: return false;
+    case 2: return true;
+    case 3: return true;
+  }
+  if (n % 2 == 0) return false;
+  if (n % 3 == 0) return false;
+
+  if (n % 6 != 1 && n % 6 != 5) return false;
+  for (int i = 5; i * i <= n; i += 6) {
+    if (n % i == 0) return false;
+    if (n % (i + 2) == 0) return false;
+  }
+  return true;
+}
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N;
+  cin >> N;
+
+  int num = 0;
+  for (int i = 1; i <= N; i++) {
+    num += i;
   }
-  cout << cnt << endl;
+  if (is_prime(num)) {
+    cout << "WANWAN" << endl;
+  } else {
+    cout << "BOWWOW" << endl;
+  }
   return 0;
 }

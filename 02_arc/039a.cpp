@@ -32,13 +32,16 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
-  }
-  cout << cnt << endl;
+  int A, B;
+  cin >> A >> B;
+
+  int ans = -5000;
+  ans = max(ans, 900 + A % 100 - B);
+  ans = max(ans, A / 100 * 100 + 90 + A % 10 - B);
+  ans = max(ans, A / 10 * 10 + 9 - B);
+  ans = max(ans, A - (100 + B % 100));
+  ans = max(ans, A - (B / 100 * 100 + B % 10));
+  ans = max(ans, A - (B / 10 * 10));
+  cout << ans << endl;
   return 0;
 }

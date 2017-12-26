@@ -28,17 +28,29 @@ typedef unsigned long long ull;
 
 using namespace std;
 
+int a[100010] = {};
+bool wrote[100010] = {};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N, M;
+  cin >> N >> M;
+  REP(i, M) {
+    cin >> a[i];
   }
-  cout << cnt << endl;
+  reverse(a, a + M);
+  REP(i, M) {
+    if (!wrote[a[i]]) {
+      cout << a[i] << endl;
+    }
+    wrote[a[i]] = true;
+  }
+  for (int i = 1; i <= N; i++) {
+    if (!wrote[i]) {
+      cout << i << endl;
+    }
+  }
   return 0;
 }

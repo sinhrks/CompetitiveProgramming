@@ -32,13 +32,9 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
-  }
-  cout << cnt << endl;
+  int H, W;
+  cin >> H >> W;
+
+  cout << H * (W - 1) + (H - 1) * W << endl;
   return 0;
 }

@@ -32,13 +32,25 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  int N;
+  cin >> N;
+
+  int red = 0;
+  int blue = 0;
+  REP(i, N) {
+    string s;
+    cin >> s;
+    REP(j, s.size()) {
+      if (s[j] == 'R') red++;
+      if (s[j] == 'B') blue++;
+    }
   }
-  cout << cnt << endl;
+  if (red > blue) {
+    cout << "TAKAHASHI" << endl;
+  } else if (red == blue) {
+    cout << "DRAW" << endl;
+  } else {
+    cout << "AOKI" << endl;
+  }
   return 0;
 }

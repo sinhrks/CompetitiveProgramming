@@ -32,13 +32,21 @@ int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
 
-  ull X, Y;
-  cin >> X >> Y;
-  int cnt = 0;
-  while (X <= Y) {
-    cnt++;
-    X *= 2;
+  ull A, K;
+  cin >> A >> K;
+  if (K == 0) {
+    cout << 2000000000000 - A << endl;
+    return 0;
+  } else {
+    int day = 0;
+    while (true) {
+      day++;
+      A += 1 + A * K;
+      if (A >= 2000000000000) {
+        cout << day << endl;
+        return 0;
+      }
+    }
   }
-  cout << cnt << endl;
   return 0;
 }
